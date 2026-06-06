@@ -41,9 +41,6 @@
       <a href="{% url 'chat_conversa' conversa.usuario.username %}" class="conversa">
         <div class="avatar">
           {{ conversa.usuario.username|slice:":1" }}
-          {% if nao_lidas_por_usuario[conversa.usuario.id] %}
-            <div class="avatar-badge"></div>
-          {% endif %}
         </div>
         <div class="conversa-info">
           <div class="conversa-nome">{{ conversa.usuario.username }}</div>

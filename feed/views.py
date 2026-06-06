@@ -210,18 +210,8 @@ def chat_lista(request):
         if outro.id not in conversas:
             conversas[outro.id] = {'usuario': outro, 'ultima': msg}
 
-    nao_lidas_por_usuario = {}
-    for uid, dados in conversas.items():
-        nao_lidas_por_usuario[uid] = Mensagem.objects.filter(
-            remetente=dados['usuario'], destinatario=request.user, lida=False
-        ).count()
-
-    msgs_nao_lidas = Mensagem.objects.filter(destinatario=request.user, lida=False).count()
-
     return render(request, 'feed/chat_lista.html', {
         'conversas': conversas.values(),
-        'nao_lidas_por_usuario': nao_lidas_por_usuario,
-        'msgs_nao_lidas': msgs_nao_lidas,
     })
 
 
