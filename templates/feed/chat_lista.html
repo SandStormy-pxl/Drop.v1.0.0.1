@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mensagens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#080808;--surface:#111111;--border:#222222;--text:#f0f0f0;--muted:#555555;--accent:#e8ff57;--blue:#1d9bf0;--red:#f4212e;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+    header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:12px;padding:0 16px;height:56px;background:rgba(8,8,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+    header a{color:var(--blue);text-decoration:none;font-size:1.2rem;}
+    header h1{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;}
+    .container{max-width:560px;margin:0 auto;padding:72px 0 40px;}
+    .conversa{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);text-decoration:none;transition:background 0.15s;position:relative;}
+    .conversa:hover{background:rgba(255,255,255,0.03);}
+    .avatar{width:46px;height:46px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);text-transform:uppercase;flex-shrink:0;position:relative;}
+    .avatar-badge{position:absolute;bottom:0;right:0;width:12px;height:12px;background:var(--red);border-radius:50%;border:2px solid var(--bg);}
+    .conversa-info{flex:1;min-width:0;}
+    .conversa-nome{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);}
+    .conversa-nome::before{content:'@';color:var(--accent);}
+    .conversa-ultima{font-size:0.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+    .vazio{text-align:center;color:var(--muted);padding:60px 20px;font-size:0.9rem;}
+    .nova-conversa{padding:14px 16px;border-bottom:1px solid var(--border);}
+    .nova-conversa a{color:var(--blue);text-decoration:none;font-size:0.85rem;font-family:'Syne',sans-serif;font-weight:600;}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="{% url 'feed' %}">←</a>
+    <h1>Mensagens</h1>
+  </header>
+
+  <div class="container">
+    <div class="nova-conversa">
+      <a href="{% url 'busca' %}">+ Nova conversa</a>
+    </div>
+
+    {% for conversa in conversas %}
+      <a href="{% url 'chat_conversa' conversa.usuario.username %}" class="conversa">
+        <div class="avatar">
+          {{ conversa.usuario.username|slice:":1" }}
+          {% if nao_lidas_por_usuario[conversa.usuario.id] %}
+            <div class="avatar-badge"></div>
+          {% endif %}
+        </div>
+        <div class="conversa-info">
+          <div class="conversa-nome">{{ conversa.usuario.username }}</div>
+          <div class="conversa-ultima">
+            {% if conversa.ultima.post_compartilhado %}
+              📎 Post compartilhado
+            {% else %}
+              {{ conversa.ultima.texto|truncatechars:40 }}
+            {% endif %}
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <div class="vazio">Nenhuma conversa ainda.</div>
+    {% endfor %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compartilhar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#080808;--surface:#111111;--border:#222222;--text:#f0f0f0;--muted:#555555;--accent:#e8ff57;--blue:#1d9bf0;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+    header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:12px;padding:0 16px;height:56px;background:rgba(8,8,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+    header a{color:var(--blue);text-decoration:none;font-size:1.2rem;}
+    header h1{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;}
+    .container{max-width:560px;margin:0 auto;padding:72px 16px 40px;}
+    .subtitulo{font-size:0.82rem;color:var(--muted);margin-bottom:16px;}
+    .usuario-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+    .usuario-info{display:flex;align-items:center;gap:10px;}
+    .avatar{width:40px;height:40px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;color:var(--accent);text-transform:uppercase;}
+    .usuario-nome{font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;}
+    .usuario-nome::before{content:'@';color:var(--accent);}
+    .btn-enviar{background:var(--accent);color:#000;border:none;border-radius:9999px;padding:7px 16px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.2s;}
+    .btn-enviar:hover{background:#c8df30;}
+    .vazio{text-align:center;color:var(--muted);padding:40px 0;font-size:0.9rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="javascript:history.back()">←</a>
+    <h1>Compartilhar post</h1>
+  </header>
+
+  <div class="container">
+    <p class="subtitulo">Enviar para quem?</p>
+    <form method="POST">
+      {% csrf_token %}
+      {% for usuario in usuarios %}
+        <div class="usuario-item">
+          <div class="usuario-info">
+            <div class="avatar">{{ usuario.username|slice:":1" }}</div>
+            <div class="usuario-nome">{{ usuario.username }}</div>
+          </div>
+          <button type="submit" name="destinatario_id" value="{{ usuario.id }}" class="btn-enviar">Enviar</button>
+        </div>
+      {% empty %}
+        <div class="vazio">Nenhum usuário disponível.</div>
+      {% endfor %}
+    </form>
+  </div>
+</body>
+</html>
