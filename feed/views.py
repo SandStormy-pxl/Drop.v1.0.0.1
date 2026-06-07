@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from .models import Post, Curtida, Comentario, Seguidor, Mensagem
 from .forms import PostForm, LoginForm, SignupForm, ComentarioForm, MensagemForm
+from django.views.decorators.csrf import csrf_exempt
 
 
 # ── AUTH ──────────────────────────────────────────────
@@ -28,7 +29,7 @@ def signup_view(request):
         form = SignupForm()
     return render(request, 'feed/signup.html', {'form': form})
 
-
+@csrf_exempt
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('feed')
